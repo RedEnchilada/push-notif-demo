@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT="$(cd "${DIR}"/../ && pwd)"
+
+docker run \
+    -it \
+    -v $(pwd):/var/www \
+    -v ~/.composer:/home/user/.composer \
+    -w /var/www \
+    --rm \
+    composer:1.7.3 "$@"

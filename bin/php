@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT="$(cd "${DIR}"/../ && pwd)"
+
+if [[ "$(docker images -q php:7.2-gmp 2> /dev/null)" == "" ]]; then
+  docker build --tag php:7.2-gmp "${ROOT}"/bin/php-gmp
+fi
+
+docker run \
+    -it \
+    -v $(pwd):/var/www \
+    -v ~/.composer:/home/user/.composer \
+    -w /var/www \
+    --rm \
+    php:7.2-gmp php "$@"
