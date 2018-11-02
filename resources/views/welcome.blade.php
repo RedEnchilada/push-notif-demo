@@ -15,6 +15,16 @@
         // so put it in the root of the site area it serves.
         const SERVICE_WORKER_URL = '/service_worker.js';
 
+        // The site's VAPID public key, as a Uint8Array.
+        const SUBSCRIPTION_PUBLIC_KEY = new Uint8Array({!! json_encode(
+            array_map(
+                function ($char) {
+                    return ord($char);
+                },
+                str_split(base64_decode(env('VAPID_PUBLIC_KEY')))
+            )
+        ) !!});
+
         (function() {
             if (!'serviceWorker' in navigator) {
                 console.error('Service workers are not supported');
@@ -31,8 +41,18 @@
             function checkSubscriptionStatus(registration) {
                 registration.pushManager.getSubscription().then(function(subscription) {
                     if (subscription === null) {
+                        subscribe(registration);
                     } else {
                     }
+                });
+            }
+
+            function subscribe(registration) {
+                registration.pushManager.subscribe({
+                    // The current webpush API standard prohibits subscriptions unless they are marked as
+                    // userVisibleOnly, which will require all pushes to respond with a desktop notification.
+                    userVisibleOnly: true,
+                    applicationServerKey: SUBSCRIPTION_PUBLIC_KEY
                 });
             }
         })();
