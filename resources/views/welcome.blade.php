@@ -21,7 +21,20 @@
                 return;
             }
 
-            navigator.serviceWorker.register(SERVICE_WORKER_URL);
+            if (!'PushManager' in window) {
+                console.error('Push notifications are not supported');
+                return;
+            }
+
+            navigator.serviceWorker.register(SERVICE_WORKER_URL).then(checkSubscriptionStatus);
+
+            function checkSubscriptionStatus(registration) {
+                registration.pushManager.getSubscription().then(function(subscription) {
+                    if (subscription === null) {
+                    } else {
+                    }
+                });
+            }
         })();
     </script>
 </body>
