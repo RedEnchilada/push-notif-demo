@@ -16,3 +16,7 @@ use Illuminate\Foundation\Inspiring;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+
+Artisan::command('push:notif {title} {description}', function ($title, $description) {
+    \App\User::first()->notify(new \App\Notifications\TestPush($title, $description));
+})->describe('Send a push notification to subscribed browsers');
