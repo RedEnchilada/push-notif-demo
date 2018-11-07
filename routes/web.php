@@ -14,3 +14,11 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::post('/push/subscribe', function (\Illuminate\Http\Request $request) {
+    \App\User::first()->updatePushSubscription(
+        $request->input('endpoint'),
+        $request->input('key'),
+        $request->input('secret')
+    );
+});
